@@ -1,0 +1,204 @@
+title: Longitudinal Flynn MIMIC Model;
+
+!Fit to longitudinal twin data;
+
+!This script fits model to Information subtest scores;
+
+data: file is !file name;
+
+variable:
+names   id        momId     ses  
+fsiq5    viq5      piq5      info5     comp5    arith5    sims5     
+vocab5    ds5  picComp5  picArr5   bd5 obj5     cod5      mazes5    
+fsiq7     viq7  piq7      info7     comp7     arith7   
+sims7     vocab7    ds7       picComp7 picArr7   bd7       
+obj7      cod7     mazes7    fsiq8     viq8      piq8     
+  info8     comp8     arith8    sims8    
+  vocab8    ds8       picComp8  picArr8  
+  bd8       obj8      cod8      mazes8   
+  fsiq9     viq9      piq9      info9    
+  comp9     arith9    sims9     vocab9   
+  ds9       picComp9  picArr9   bd9      
+  obj9      cod9      mazes9    fsiq10   
+ viq10     piq10     info10    comp10   
+ arith10   sims10    vocab10   ds10     
+ picComp10 picArr10  bd10      obj10    
+ cod10     mazes10   fsiq11    viq11    
+  piq11     info11    comp11    arith11  
+  sims11    vocab11   ds11      picComp11
+  picArr11  bd11      obj11     cod11    
+  mazes11   fsiq12    viq12     piq12    
+  info12    comp12    arith12   sims12   
+ vocab12   ds12      picComp12 picArr12 
+bd12      obj12     cod12     mazes12  
+fsiq13    viq13     piq13     info13   
+comp13    arith13   sims13    vocab13  
+ds13      picComp13 picArr13  bd13     
+obj13     cod13     mazes13   fsiq14   
+viq14     piq14     info14    comp14   
+arith14   sims14    vocab14   ds14     
+picComp14 picArr14  bd14      obj14    
+cod14     mazes14   fsiq15    viq15    
+piq15     info15    comp15    arith15  
+sims15    vocab15   ds15      picComp15
+picArr15  bd15      obj15     cod15    
+mazes15   fsiq16    viq16     piq16    
+info16    comp16    arith16   sims16   
+vocab16   ds16      picComp16 picArr16 
+bd16      obj16     cod16     mazes16  
+fsiq17    viq17     piq17     info17   
+comp17    arith17   sims17    vocab17  
+ds17      picComp17 picArr17  bd17     
+obj17     cod17     mazes17   test5    
+test7     test8     test9     test10   
+test11    test12    test13    test14   
+test15    test16    test17    dotDay5  
+dotDay7   dotDay8   dotDay9   dotDay10 
+dotDay11  dotDay12  dotDay13  dotDay14 
+dotDay15  dotDay16  dotDay17  dobDay;  
+
+missing is .;
+
+usevariables are info7 comp7 arith7  sims7 vocab7  ds7  
+ picComp7   picArr7 bd7   obj7  cod7 
+ info8 comp8 arith8  sims8 vocab8  ds8  
+ picComp8   picArr8 bd8   obj8  cod8
+ info9  comp9 arith9  sims9 vocab9  ds9   
+ picComp9   picArr9 bd9   obj9  cod9
+ info12  comp12  arith12 sims12  vocab12 ds12 
+picComp12  picArr12   bd12  obj12 cod12
+  info15 comp15  arith15 sims15  vocab15 ds15 
+   picComp15  picArr15   bd15  obj15 cod15
+test7 test8 test9 test12 test15
+ dobday; 
+ 
+ cluster = momid;
+ 
+DEFINE:
+dobday = dobday/3650;
+
+ANALYSIS:
+TYPE = COMPLEX;
+model=nocovariances;
+
+MODEL: 
+! Create factors at each age
+! Constrain factor structure to be
+! equal across ages
+
+f7 by info7(1); 
+f7 by comp7(2);
+f7 by arith7(3);
+f7 by sims7(4);
+f7 by vocab7(5);
+f7 by ds7(6);
+f7 by picComp7(7);
+f7 by picArr7(8);
+f7 by bd7(9);
+f7 by obj7(10);
+f7 by cod7(11);
+
+f8 by info8(1); 
+f8 by comp8(2);
+f8 by arith8(3);
+f8 by sims8(4);
+f8 by vocab8(5);
+f8 by ds8(6);
+f8 by picComp8(7);
+f8 by picArr8(8);
+f8 by bd8(9);
+f8 by obj8(10);
+f8 by cod8(11);
+
+f9 by info9(1); 
+f9 by comp9(2);
+f9 by arith9(3);
+f9 by sims9(4);
+f9 by vocab9(5);
+f9 by ds9(6);
+f9 by picComp9(7);
+f9 by picArr9(8);
+f9 by bd9(9);
+f9 by obj9(10);
+f9 by cod9(11);
+
+f12 by info12(1); 
+f12 by comp12(2);
+f12 by arith12(3);
+f12 by sims12(4);
+f12 by vocab12(5);
+f12 by ds12(6);
+f12 by picComp12(7);
+f12 by picArr12(8);
+f12 by bd12(9);
+f12 by obj12(10);
+f12 by cod12(11);
+
+f15 by info15(1); 
+f15 by comp15(2);
+f15 by arith15(3);
+f15 by sims15(4);
+f15 by vocab15(5);
+f15 by ds15(6);
+f15 by picComp15(7);
+f15 by picArr15(8);
+f15 by bd15(9);
+f15 by obj15(10);
+f15 by cod15(11);
+
+!intercepts
+[info7-cod15@0];
+[f7-f15@0];
+[i*];
+[s*];
+
+!Residual variances of factors
+f7-f15*;
+
+!Build LGC model using these factors.
+!Fixing time scores for slope factors 
+! at 0, 1, 2, 5, and 8 to account for different ages.
+i s | f7@0 f8@1 f9@2 f12@5 f15@8; 
+
+! explicitly mention testVersion & dobDay so observations with na 
+! on time-varying covs on aren't dropped:
+test7*;
+test8*;
+test9*;
+test12*;
+test15*;
+
+dobday*;
+
+dobday with test7-test15;
+
+test7 with test8-test15;
+test8 with test9-test15;
+test9 with test12-test15;
+test12 with test15;
+
+!Cohort effects
+i on dobday;
+s on dobday;
+
+! Test effects
+  f7 on test7*;
+  f8 on test8*;
+  f9 on test9*;
+  f12 on test12*;
+  f15 on test15*;
+
+f8 on f7;
+f9 on f8;
+f12 on f9;
+f15 on f12;
+
+! Mimic
+info7 on dobday test7*(mimic1-mimic2);
+info8 on dobday test8*(mimic1-mimic2);
+info9 on dobday test9*(mimic1-mimic2);
+info12 on dobday test12*(mimic1-mimic2);
+info15 on dobday test15*(mimic1-mimic2);
+
+output:
+sampstat;
