@@ -1,0 +1,116 @@
+title: Flynn Latent Growth Curve Model;
+
+!This script fits the model to Information subtest scores;
+
+!Fit to longitudinal twin data
+
+data: file is !file name;
+
+variable:
+names   id        momId     ses  
+fsiq5    viq5      piq5      info5     comp5    arith5    sims5     
+vocab5    ds5  picComp5  picArr5   bd5 obj5     cod5      mazes5    
+fsiq7     viq7  piq7      info7     comp7     arith7   
+sims7     vocab7    ds7       picComp7 picArr7   bd7       
+obj7      cod7     mazes7    fsiq8     viq8      piq8     
+  info8     comp8     arith8    sims8    
+  vocab8    ds8       picComp8  picArr8  
+  bd8       obj8      cod8      mazes8   
+  fsiq9     viq9      piq9      info9    
+  comp9     arith9    sims9     vocab9   
+  ds9       picComp9  picArr9   bd9      
+  obj9      cod9      mazes9    fsiq10   
+ viq10     piq10     info10    comp10   
+ arith10   sims10    vocab10   ds10     
+ picComp10 picArr10  bd10      obj10    
+ cod10     mazes10   fsiq11    viq11    
+  piq11     info11    comp11    arith11  
+  sims11    vocab11   ds11      picComp11
+  picArr11  bd11      obj11     cod11    
+  mazes11   fsiq12    viq12     piq12    
+  info12    comp12    arith12   sims12   
+ vocab12   ds12      picComp12 picArr12 
+bd12      obj12     cod12     mazes12  
+fsiq13    viq13     piq13     info13   
+comp13    arith13   sims13    vocab13  
+ds13      picComp13 picArr13  bd13     
+obj13     cod13     mazes13   fsiq14   
+viq14     piq14     info14    comp14   
+arith14   sims14    vocab14   ds14     
+picComp14 picArr14  bd14      obj14    
+cod14     mazes14   fsiq15    viq15    
+piq15     info15    comp15    arith15  
+sims15    vocab15   ds15      picComp15
+picArr15  bd15      obj15     cod15    
+mazes15   fsiq16    viq16     piq16    
+info16    comp16    arith16   sims16   
+vocab16   ds16      picComp16 picArr16 
+bd16      obj16     cod16     mazes16  
+fsiq17    viq17     piq17     info17   
+comp17    arith17   sims17    vocab17  
+ds17      picComp17 picArr17  bd17     
+obj17     cod17     mazes17   t5    
+t7     t8     t9     t10   
+t11    t12    t13    t14   
+t15    t16    t17    dotDay5  
+dotDay7   dotDay8   dotDay9   dotDay10 
+dotDay11  dotDay12  dotDay13  dotDay14 
+dotDay15  dotDay16  dotDay17  dobDay;  
+
+missing is .;
+
+usevariables are info7 info8 info9 info12 info15
+t7  t8  t9 t12 t15   
+dobday;
+
+cluster is momid;
+
+define:
+dobday = dobday/3650;
+
+analysis:
+model = nocovariances; !so covariances with test version aren't modeled
+
+!Adjust standard errors to account for twins being from same family
+TYPE IS COMPLEX; 
+
+model:
+!defining the intercept and slope factors; fixing time scores for slope factors 
+!to account for different ages 
+i s | info7@0 info8@1 info9@2 info12@5  info15@8; 
+
+i with s;
+
+! explicitly mention testVersion & dot so observations with na 
+! on time-varying covs on aren't dropped:
+t7*;
+t8*;
+t9*;
+t12*;
+t15*;
+dobday*;
+
+info7 on t7;
+info8 on t8;
+info9 on t9;
+info12 on t12;
+info15 on t15;
+
+info15 on info12;
+info12 on info9;
+info9 on info8;
+info8 on info7;
+
+I ON dobday*(dobreg);
+s on dobday;
+
+dobday with t7-t15;
+
+t7 with t8-t15;
+t8 with t9-t15;
+t9 with t12-t15;
+t12 with t15;
+
+output:
+sampstat;
+residual;
