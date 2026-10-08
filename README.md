@@ -1,6 +1,6 @@
-Mplus code used to perform analyses in the Giangrande et al. (2025) preprint entitled "To g or not to g? A Cross-Domain, Subtest-Level Investigation of the Flynn Effect Across Ages 7-15 Years."
+Mplus code used to perform analyses in the Giangrande et al. (2026) study entitled "To g or not to g? A Cross-Domain, Subtest-Level Investigation of the Flynn Effect Across Ages 7-15 Years."
 
-The manuscript is in press at Multivariate Behavioral Research. The preprint is available here: https://doi.org/10.31234/osf.io/v9nfs_v1
+The published manuscript is available at Multivariate Behavioral Research: https://www.tandfonline.com/doi/full/10.1080/00273171.2026.2707653#abstract
 
 -FlynnGrowth: fits Latent Growth Curve (LGC) model to subtests
 
